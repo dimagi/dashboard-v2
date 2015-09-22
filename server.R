@@ -105,7 +105,10 @@ function(input, output, session) {
   })
   
   map_popup <- function(data) {
-    s <- paste("<h4>CSPS de ", data$name, "</h4>")
+    s <- paste("<h4>")
+    s <- paste(s, "CSPS de ", data$name, "<br/>")
+    s <- paste(s, "<small>District de ", CA(data$district), "</small>")
+    s <- paste(s, "</h4>")
     s <- paste(s, "<p>")
     s <- paste(s, "<b># consultations : </b>", data$n_consults, "<br/>")
     s <- paste(s, "<b># agents actifs : </b>", data$hw_consulting, "/", data$hw_total, "(", percent(data$hw_consulting, data$hw_total, 2), "%) <br/>")
