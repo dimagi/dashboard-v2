@@ -1,5 +1,23 @@
 body <- dashboardBody(
   tabItems(
+    ##################
+    ## Overview Tab ##
+    ##################
+    tabItem(tabName = "overview",
+      fluidRow(
+        valueBox(ieda_start_date, "Date de déploiement", icon = icon("clock-o"), color = "green"),
+        valueBox(GL_n_consults, "Consultations", icon = icon("stethoscope")),
+        valueBox(GL_n_patients, "Patients", icon = icon("child"))
+      ),
+      fluidRow(
+        valueBox(GL_n_districts, "Districts", icon = icon("map-marker"), color = "purple"),
+        valueBox(GL_n_mobile_users, "Centres de santé", icon = icon("hospital-o"), color = "purple"),
+        valueBox(GL_n_health_workers, "Agents de santé", icon = icon("user-md"), color = "purple")
+      )
+    ),
+    #############
+    ## Map Tab ##
+    #############
     tabItem(tabName = "geo",
       fluidRow(
         box(title = "Sélection de la donnée",
@@ -12,35 +30,6 @@ body <- dashboardBody(
       )
     )
   )
-#   
-#   tabItems(
-#     tabItem(tabName = "overview",
-#       fluidRow(
-#         valueBox("16.12.2014", "Date de déploiement", icon = icon("clock-o"), color = "green"),
-#         valueBox(GL_n_consults, "Consultations", icon = icon("stethoscope")),
-#         valueBox(GL_n_patients, "Patients", icon = icon("child"))
-#       ),
-# 
-#       fluidRow(
-#         valueBox(GL_n_districts, "Districts", icon = icon("map-marker"), color = "purple"),
-#         valueBox(GL_n_mobile_users, "Centres de santé", icon = icon("hospital-o"), color = "purple"),
-#         valueBox(GL_n_health_workers, "Agents de santé", icon = icon("user-md"), color = "purple")
-#       )
-#     ),
-#     
-#     tabItem(tabName = "geo",
-#       fluidRow(
-#         box(title = "Sélection de la donnée",
-#           radioButtons("geo_data", "", 
-#             c("Position" = "position", "Nombre consultations" = "n_consults", "Délai de synchronisation" = "sync_lag"), inline = T),
-#           status = "warning", solidHeader = T, width = 12),
-#         box(title = "Carte des ditricts sanitaire",
-#           leafletMap("map", width = "100%", height = 500, options = list(center = c(13, -3), zoom = 5)),
-#           width = 12, height = "100%", status = "primary", solidHeader = T
-#         )
-#       )
-#     ),
-# 
 #     tabItem(tabName = "rec_usage_who",
 #       fluidRow(
 #         box(title = "Nombre de consultations par type d'agent", htmlOutput("rec_usage_who_line"), width = 12, status = "primary", solidHeader = T)

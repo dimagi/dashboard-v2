@@ -1,8 +1,3 @@
-###############
-## Constants ##
-###############
-ieda_start_date <- ymd("2014-12-15")
-
 #######################
 ## Load tablet users ##
 #######################
@@ -313,9 +308,3 @@ to_age_range_month <- function (data) {
                    to = c("0-2", "2-6", "6-12", "12-24", "24-36", "36-48", "48-60", ">=60"))
   data
 }
-
-# Analyser les durées négatives pour faire ressortir les problèmes d'heure sur les tablettes
-# nombre de formulaire par csps
-# Temps moyen de saisie du formulaire de consulation ou traitement en fonction du nombre de classifications trouvées
-# Temps moyen de saise du formulaire (consult ou traitement) en fonction du nombre de classifications graves
-# nombre de consultations par agent par CSPS

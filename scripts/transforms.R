@@ -113,3 +113,16 @@ format_number <- function(number) {
 percent <- function(value, total, decimals = 0) {
   round(value / total * 100, decimals)
 }
+
+visit_to_report_date <- function(data) {
+  d <- as.numeric(format(data, "%d"))
+  res <- data
+  if (d > 25) {
+    res <- data + months(1)
+  }
+  res <- format(res, "%Y-%m")
+  if (is.na(res)) {
+    print(paste(data, " - ", res))
+  }
+  res
+}

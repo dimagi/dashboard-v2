@@ -1,4 +1,9 @@
 # Nombre de nouveaux infirmiers sur une période pour avoir une idée du turnover du staff
+# Analyser les durées négatives pour faire ressortir les problèmes d'heure sur les tablettes
+# nombre de formulaire par csps
+# Temps moyen de saisie du formulaire de consulation ou traitement en fonction du nombre de classifications trouvées
+# Temps moyen de saise du formulaire (consult ou traitement) en fonction du nombre de classifications graves
+# nombre de consultations par agent par CSPS
 
 function(input, output, session) {
   
