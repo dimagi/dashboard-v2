@@ -6,9 +6,14 @@ library(dplyr)
 library(shiny)
 library(leaflet)
 library(shinydashboard)
+library(googleVis)
+
+library(rdrop2)
 
 source("scripts/load-data.R")
 source("scripts/transforms.R")
+
+# dropbox_token <- readRDS("ieda-dropbox-token.rds")
 
 locations_data <- locations_load_data("data/locations.csv")
 tablet_users_data <- tablet_users_load_data("data/tablet-users.csv")
@@ -24,10 +29,9 @@ GL_n_patients <- format_number(length(unique(visit_data$case_id)))
 GL_n_districts <- as.character(length(levels(visit_data$district)))
 GL_n_mobile_users <- as.character(length(levels(visit_data$mobile_user)))
 GL_n_health_workers <- as.character(nrow(consulting_health_workers(visit_data)))
-# 
-# 
-# GL_chart_w = "100%"
-# GL_chart_h = 400
-# 
+
+GL_chart_w = "100%"
+GL_chart_h = 400
+
 GL_fist_consult_date = min(visit_data$started_on)
 GL_last_consult_date = max(visit_data$started_on)

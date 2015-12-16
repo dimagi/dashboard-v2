@@ -28,8 +28,51 @@ body <- dashboardBody(
           leafletOutput("map", width = "100%", height = 500),
           width = 12, height = "100%", status = "primary", solidHeader = T)
       )
-    )
+    ),
+    tabItem(tabName = "consults_n_consults",
+      fluidRow(
+        box(title = "Nombre de consultations", htmlOutput("consults_n_consults_bar"), width = 12, status = "primary", solidHeader = T)
+      ),
+      fluidRow(
+        shiny::column(width = 4,
+          valueBoxOutput("consults_n_consults_n", width = NULL),
+          valueBoxOutput("consults_n_consults_average", width = NULL),
+          valueBoxOutput("consults_n_consults_min", width = NULL),
+          valueBoxOutput("consults_n_consults_max", width = NULL)
+        ),
+        shiny::column(width = 8,
+          box(title = "Nombre de consultations par CSPS", htmlOutput("consults_n_consults_tree"), width = NULL, status = "primary", solidHeader = T)
+        )
+      )
+    ),
+    tabItem(tabName = "consults_age_sex",
+      fluidRow(
+        box(title = "Nombre de consultations par tranche d'âge et sexe", htmlOutput("consults_age_sex_range_bar"), width = 8, status = "primary", solidHeader = T),
+        box(title = "Répartition par tranche d'âge", htmlOutput("consults_n_consults_range_pie"), width = 4, status = "primary", solidHeader = T)
+      ),
+      fluidRow(
+        box(title = "Nombre de consultations par d'âge", htmlOutput("consults_age_sex_age_bar"), width = 12, status = "primary", solidHeader = T)
+      )
+    ),
+    tabItem(tabName = "epi_profile_classifications",
+      fluidRow(
+        box(title = "Choix des classifications", radioButtons("class_freq", "", 
+          c("Maladies" = "illness", "Maladies et états" = "illness_states"), inline = T), width = 12, status = "warning", solidHeader = T),
+        box(title = "Fréquences des classifications", dataTableOutput("epi_profile_classifications_table"), width = 12, status = "primary", solidHeader = T)
+      )
+    ),
+    
+    tabItem(tabName = "epi_profile_combinations",
+      fluidRow(
+        box(title = "Choix des classifications", radioButtons("class_comb", "", 
+          c("Maladies" = "illness", "Maladies et états" = "illness_states"), inline = T), width = 12, status = "warning", solidHeader = T),
+        box(title = "Fréquence des combinaisons de classifications", dataTableOutput("epi_profile_combinations_table"), width = 12, status = "primary", solidHeader = T)
+      )
+    ) 
   )
+    
+    
+    
 #     tabItem(tabName = "rec_usage_who",
 #       fluidRow(
 #         box(title = "Nombre de consultations par type d'agent", htmlOutput("rec_usage_who_line"), width = 12, status = "primary", solidHeader = T)
@@ -58,48 +101,9 @@ body <- dashboardBody(
 #       )
 #     ),
 #     
-#     tabItem(tabName = "consults_n_consults",
-#       fluidRow(
-#         box(title = "Nombre de consultations", htmlOutput("consults_n_consults_bar"), width = 12, status = "primary", solidHeader = T)
-#       ),
-#       fluidRow(
-#         shiny::column(width = 4,
-#           valueBoxOutput("consults_n_consults_n", width = NULL),
-#           valueBoxOutput("consults_n_consults_average", width = NULL),
-#           valueBoxOutput("consults_n_consults_min", width = NULL),
-#           valueBoxOutput("consults_n_consults_max", width = NULL)
-#         ),
-#         shiny::column(width = 8,
-#           box(title = "Nombre de consultations par CSPS", htmlOutput("consults_n_consults_tree"), width = NULL, status = "primary", solidHeader = T)
-#         )
-#       )
-#     ),
+
 #     
-#     tabItem(tabName = "consults_age_sex",
-#       fluidRow(
-#         box(title = "Nombre de consultations par tranche d'âge et sexe", htmlOutput("consults_age_sex_range_bar"), width = 8, status = "primary", solidHeader = T),
-#         box(title = "Répartition par tranche d'âge", htmlOutput("consults_n_consults_range_pie"), width = 4, status = "primary", solidHeader = T)
-#       ),
-#       fluidRow(
-#         box(title = "Nombre de consultations par d'âge", htmlOutput("consults_age_sex_age_bar"), width = 12, status = "primary", solidHeader = T)
-#       )
-#     ),
-#     
-#     tabItem(tabName = "epi_profile_classifications",
-#       fluidRow(
-#         box(title = "Choix des classifications", radioButtons("class_freq", "", 
-#           c("Maladies" = "illness", "Maladies et états" = "illness_states"), inline = T), width = 12, status = "warning", solidHeader = T),
-#         box(title = "Fréquences des classifications", dataTableOutput("epi_profile_classifications_table"), width = 12, status = "primary", solidHeader = T)
-#       )
-#     ),
-#     
-#     tabItem(tabName = "epi_profile_combinations",
-#       fluidRow(
-#         box(title = "Choix des classifications", radioButtons("class_comb", "", 
-#           c("Maladies" = "illness", "Maladies et états" = "illness_states"), inline = T), width = 12, status = "warning", solidHeader = T),
-#         box(title = "Fréquence des combinaisons de classifications", dataTableOutput("epi_profile_combinations_table"), width = 12, status = "primary", solidHeader = T)
-#       )
-#     ),
+
 #     
 #     tabItem(tabName = "data_entry",
 #       fluidRow(
