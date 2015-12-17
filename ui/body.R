@@ -61,65 +61,55 @@ body <- dashboardBody(
         box(title = "Fréquences des classifications", dataTableOutput("epi_profile_classifications_table"), width = 12, status = "primary", solidHeader = T)
       )
     ),
-    
     tabItem(tabName = "epi_profile_combinations",
       fluidRow(
         box(title = "Choix des classifications", radioButtons("class_comb", "", 
           c("Maladies" = "illness", "Maladies et états" = "illness_states"), inline = T), width = 12, status = "warning", solidHeader = T),
         box(title = "Fréquence des combinaisons de classifications", dataTableOutput("epi_profile_combinations_table"), width = 12, status = "primary", solidHeader = T)
       )
-    ) 
+    ),
+    tabItem(tabName = "rec_usage_who",
+      fluidRow(
+        box(title = "Nombre de consultations par type d'agent", htmlOutput("rec_usage_who_line"), width = 12, status = "primary", solidHeader = T)
+      ),
+      fluidRow(
+        box(title = "Répartition du nombre de consultations par type d'agent", htmlOutput("rec_usage_who_pie"), width = 8, status = "primary", solidHeader = T),
+        box(title = "Nombre d'agents", dataTableOutput("rec_usage_who_table"), width = 4, status = "primary", solidHeader = T)
+      )
+    ),
+    
+    tabItem(tabName = "rec_usage_profile",
+      fluidRow(
+        box(title = "Utilisation du REC selon l'heure de la journée et le jour de la semaine", plotOutput("rec_usage_profile_hm"), width = 12, status = "primary", solidHeader = T)
+      )
+    ),
+    
+    tabItem(tabName = "rec_usage_sync_lag",
+      fluidRow(
+        box(title = "Délai de synchronisation par CSPS", htmlOutput("rec_usage_sync_lag_bar"), width = 8, status = "primary", solidHeader = T),
+        box(title = "CSPS avec délai sup. à la moyenne", htmlOutput("rec_usage_sync_lag_pie"), width = 4, status = "primary", solidHeader = T)
+      ),
+      fluidRow(
+        valueBoxOutput("rec_usage_sync_lag_avg"),
+        valueBoxOutput("rec_usage_sync_lag_median"),
+        valueBoxOutput("rec_usage_sync_lag_n_above_avg")
+      )
+    ),
+    tabItem(tabName = "data_entry",
+      fluidRow(
+        box(title = "Durée moyenne de saisie des formulaires", htmlOutput("data_entry_average"), width = 6, status = "primary", solidHeader = T),
+        box(title = "Durée moyenne de saisie ~ Qualification de l'agent", htmlOutput("data_entry_qualification"), width = 6, status = "primary", solidHeader = T)
+      ),
+      fluidRow(
+        box(title = "Durée moyenne de saisie ~ Nombre de classifications", htmlOutput("data_entry_n_classifications_eval"), width = 6, status = "primary", solidHeader = T),
+        box(title = "Durée moyenne de saisie ~ Nombre de classifications", htmlOutput("data_entry_n_classifications_treat"), width = 6, status = "primary", solidHeader = T)
+      ),
+      fluidRow(
+        valueBoxOutput("data_entry_n_minutes", width = 3),
+        valueBoxOutput("data_entry_n_hours", width = 3),
+        valueBoxOutput("data_entry_n_days", width = 3),
+        valueBoxOutput("data_entry_average_agent", width = 3)
+      )
+    )
   )
-    
-    
-    
-#     tabItem(tabName = "rec_usage_who",
-#       fluidRow(
-#         box(title = "Nombre de consultations par type d'agent", htmlOutput("rec_usage_who_line"), width = 12, status = "primary", solidHeader = T)
-#       ),
-#       fluidRow(
-#         box(title = "Répartition du nombre de consultations par type d'agent", htmlOutput("rec_usage_who_pie"), width = 8, status = "primary", solidHeader = T),
-#         box(title = "Nombre d'agents", dataTableOutput("rec_usage_who_table"), width = 4, status = "primary", solidHeader = T)
-#       )
-#     ),
-#     
-#     tabItem(tabName = "rec_usage_profile",
-#       fluidRow(
-#         box(title = "Utilisation du REC selon l'heure de la journée et le jour de la semaine", plotOutput("rec_usage_profile_hm"), width = 12, status = "primary", solidHeader = T)
-#       )
-#     ),
-#     
-#     tabItem(tabName = "rec_usage_sync_lag",
-#       fluidRow(
-#         box(title = "Délai de synchronisation par CSPS", htmlOutput("rec_usage_sync_lag_bar"), width = 8, status = "primary", solidHeader = T),
-#         box(title = "CSPS avec délai sup. à la moyenne", htmlOutput("rec_usage_sync_lag_pie"), width = 4, status = "primary", solidHeader = T)
-#       ),
-#       fluidRow(
-#         valueBoxOutput("rec_usage_sync_lag_avg"),
-#         valueBoxOutput("rec_usage_sync_lag_median"),
-#         valueBoxOutput("rec_usage_sync_lag_n_above_avg")
-#       )
-#     ),
-#     
-
-#     
-
-#     
-#     tabItem(tabName = "data_entry",
-#       fluidRow(
-#         box(title = "Durée moyenne de saisie des formulaires", htmlOutput("data_entry_average"), width = 6, status = "primary", solidHeader = T),
-#         box(title = "Durée moyenne de saisie ~ Qualification de l'agent", htmlOutput("data_entry_qualification"), width = 6, status = "primary", solidHeader = T)
-#       ),
-#       fluidRow(
-#         box(title = "Durée moyenne de saisie ~ Nombre de classifications", htmlOutput("data_entry_n_classifications_eval"), width = 6, status = "primary", solidHeader = T),
-#         box(title = "Durée moyenne de saisie ~ Nombre de classifications", htmlOutput("data_entry_n_classifications_treat"), width = 6, status = "primary", solidHeader = T)
-#       ),
-#       fluidRow(
-#         valueBoxOutput("data_entry_n_minutes", width = 3),
-#         valueBoxOutput("data_entry_n_hours", width = 3),
-#         valueBoxOutput("data_entry_n_days", width = 3),
-#         valueBoxOutput("data_entry_average_agent", width = 3)
-#       )
-#     )
-#   )
 )

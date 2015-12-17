@@ -2,6 +2,7 @@ library(reports)
 library(lubridate)
 library(plyr)
 library(dplyr)
+library(ggplot2)
 
 library(shiny)
 library(leaflet)
@@ -13,7 +14,7 @@ library(rdrop2)
 source("scripts/load-data.R")
 source("scripts/transforms.R")
 
-# dropbox_token <- readRDS("ieda-dropbox-token.rds")
+ieda_start_date <- ymd("2014-12-15")
 
 locations_data <- locations_load_data("data/locations.csv")
 tablet_users_data <- tablet_users_load_data("data/tablet-users.csv")
@@ -21,8 +22,6 @@ mobile_users_data <- mobile_users_load_data("data/mobile-users.csv", locations_d
 enroll_data <- enroll_child_load_data("data/enroll-child.csv", mobile_users_data)
 visit_data <- child_visit_load_data("data/child-visit.csv", tablet_users_data, mobile_users_data)
 treatment_data <- child_treatment_load_data("data/child-treatment.csv", mobile_users_data)
-
-ieda_start_date <- ymd("2014-12-15")
 
 GL_n_consults <- format_number(nrow(visit_data))
 GL_n_patients <- format_number(length(unique(visit_data$case_id)))

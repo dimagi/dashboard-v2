@@ -263,210 +263,193 @@ function(input, output, session) {
     classifications_combinations(visit_data_f(), clean)
   }, options = list(lengthMenu = c(10, 25, 50), pageLength = 10, scrollX = T))
 
- 
+  ###############
+  ## REC Usage ##
+  ###############
   
-#
-#   
+  output$rec_usage_who_line <- renderGvis({
+    qual <- as.data.frame.matrix(t(table(visit_data_f()$qualification, visit_data_f()$started_year_month)))
+    qual <- cbind(rownames(qual), qual)
 
-#   
-#   
-#   sync_lag_data <- reactive({ sync_lag(visit_data_f(), "mobile_user") })
-#   
-#   sync_lag_summary <- reactive({ summary(sync_lag_data()) })
-#   
+    options <- list(height = GL_chart_h,
+                    hAxis = "{title:'Mois de l\\\'année'}",
+                    vAxis = "{title:'Nombre de consultations'}")
+    
+    gvisLineChart(qual, options = options)
+  })
+  
+  output$rec_usage_who_pie <- renderGvis({  
+    all_qual <- as.data.frame(table(visit_data_f()$qualification))
+    
+    options <- list(height = GL_chart_h)
+    
+    gvisPieChart(all_qual, options = options)
+  })
+  
+  output$rec_usage_who_table <- renderDataTable({
+    data <- consulting_health_workers(visit_data_f())
+    data <- table(data$qualification)
+    data <- data.frame(data)
+  }, options = list(paging = F, searching = F, columns = list(list(title = "Qualification"), list(title = "Nombre"))))
+  
+  sync_lag_data <- reactive({ sync_lag(visit_data_f(), "mobile_user") })
+  sync_lag_summary <- reactive({ summary(sync_lag_data()) })
+  sum_data_entry <- reactive({sum(visit_data_f()$duration) + sum(treatment_data_f()$duration) + sum(enroll_data_f()$duration)})
+  
+  output$rec_usage_profile_hm <- renderPlot({
+    data <- form_activity(visit_data_f(), "started")
+    
+    p <- ggplot(data, aes(x = hour, y = weekday, fill = count))
+    p + geom_tile() + labs(x = "Heure de la journée", y = "Jour de la semaine", fill = "Qté")
+  })
 
-#   
-#   sum_data_entry <- reactive({sum(visit_data_f()$duration) + sum(treatment_data_f()$duration) + sum(enroll_data_f()$duration)})
-#   
+  output$rec_usage_sync_lag_bar <- renderGvis({
+    summary <- sync_lag_summary()
+    data <- data.frame(sync_lag_data())
+    data <- cbind(rownames(data), data)
+    colnames(data) <- c("csps", "delay")
+    data <- mutate(data, average = summary[4])
+    data <- mutate(data, delay = round(as.numeric(delay), 2))
+    options <- list(height = GL_chart_h,
+                    hAxis = "{title:'Centre de santé'}",
+                    vAxis = "{title:'Délai de synchronisation (jours)'}",
+                    legend = "{position:'none'}",
+                    seriesType = "bars", 
+                    series = "{1:{type:'line'}}")
+    
+    gvisComboChart(data, options = options)
+  })
+  
+  output$rec_usage_sync_lag_pie <- renderGvis({
+    summary <- sync_lag_summary()
+    data <- round(sync_lag_data(), 2)
+    data <- table(data > summary[4])
+    names(data) <- c("Faux", "Vrai")
+    data <- data.frame(data) 
+    
+    options = list(height = GL_chart_h, legend = "{position:'bottom'}")
+    
+    gvisPieChart(data, options = options)
+  })
+  
+  output$rec_usage_sync_lag_avg <- renderValueBox({
+    data <- sync_lag_summary()[4]
+    valueBox(data, "Moyenne (jours)", icon = icon("info-circle"), color = "aqua")
+  })
+  
+  output$rec_usage_sync_lag_n_above_avg <- renderValueBox({
+    data <- sum(sync_lag_data() > sync_lag_summary()[4])
+    valueBox(data, "Nb.CSPS avec un délai > moyenne", icon = icon("exclamation-circle"), color = "red")
+  })
+  
+  output$rec_usage_sync_lag_median <- renderValueBox({
+    data <- sync_lag_summary()[3]
+    valueBox(data, "Médianne (jours)", icon = icon("info-circle"), color = "aqua")
+  })
+  
+  output$data_entry_average <- renderGvis({
+    e <- enroll_data_f()
+    v <- visit_data_f()
+    t <- treatment_data_f()
+    data <- data.frame(c(mean(e$duration), mean(v$duration), mean(t$duration)))
+    data <- cbind(c("Enregistrement", "Evaluation", "Traitement"), data)
+    colnames(data) <- c("form", "average")
+    data$average <- round(data$average, 2)
+    
+    data <- mutate(data, total = average)
+    data <- mutate(data, total.annotation = as.character(total))
+    yvar <- colnames(data)[2:ncol(data)]
+    options <- list(height = GL_chart_h,
+      legend = "{position:'none'}",
+      hAxis = "{title:'Formulaire'}",
+      vAxis = "{title:'Durée moyenne de saisie (minutes)', minValue:0}",
+      series = paste("{", ncol(data) - 3,": {type: 'line', lineWidth: 0, visibleInLegend: 'false'}}", sep = ""),
+      seriesType = "bars")
+    
+    gvisComboChart(data, xvar = "form", yvar = yvar, options = options)
+  })
+  
+  output$data_entry_qualification <- renderGvis({
+    data <- data.frame(tapply(visit_data_f()$duration, visit_data_f()$qualification, mean))
+    data <- cbind(rownames(data), data)
+    colnames(data) <- c("qualification", "average")
+    data$average <- round(data$average, 2)
+    data$average <- as.numeric(data$average)
+    data <- mutate(data, total = average)
+    data <- mutate(data, total.annotation = as.character(total))
+    yvar <- colnames(data)[2:ncol(data)]
 
-#   
-#   output$rec_usage_who_line <- renderGvis({
-#     qual <- as.data.frame.matrix(t(table(visit_data_f()$qualification, visit_data_f()$started_year_month)))
-#     qual <- cbind(rownames(qual), qual)
-# 
-#     options <- list(height = GL_chart_h,
-#                     hAxis = "{title:'Mois de l\\\'année'}",
-#                     vAxis = "{title:'Nombre de consultations'}")
-#     
-#     gvisLineChart(qual, options = options)
-#   })
-#   
-#   output$rec_usage_who_pie <- renderGvis({  
-#     all_qual <- as.data.frame(table(visit_data_f()$qualification))
-#     
-#     options <- list(height = GL_chart_h)
-#     
-#     gvisPieChart(all_qual, options = options)
-#   })
-#   
-#   output$rec_usage_who_table <- renderDataTable({
-#     data <- consulting_health_workers(visit_data_f())
-#     data <- table(data$qualification)
-#     data <- data.frame(data)
-#   }, options = list(paging = F, searching = F, columns = list(list(title = "Qualification"), list(title = "Nombre"))))
-#   
-#   output$rec_usage_profile_hm <- renderPlot({
-#     data <- form_activity(visit_data_f(), "started")
-#     
-#     p <- ggplot(data, aes(x = hour, y = weekday, fill = count))
-#     p + geom_tile() + labs(x = "Heure de la journée", y = "Jour de la semaine", fill = "Qté")
-#   })
-# 
-#   output$rec_usage_sync_lag_bar <- renderGvis({
-#     summary <- sync_lag_summary()
-#     data <- data.frame(sync_lag_data())
-#     data <- cbind(rownames(data), data)
-#     colnames(data) <- c("csps", "delay")
-#     data <- mutate(data, average = summary[4])
-#     data <- mutate(data, delay = round(as.numeric(delay), 2))
-#     options <- list(height = GL_chart_h,
-#                     hAxis = "{title:'Centre de santé'}",
-#                     vAxis = "{title:'Délai de synchronisation (jours)'}",
-#                     legend = "{position:'none'}",
-#                     seriesType = "bars", 
-#                     series = "{1:{type:'line'}}")
-#     
-#     gvisComboChart(data, options = options)
-#   })
-#   
-#   output$rec_usage_sync_lag_pie <- renderGvis({
-#     summary <- sync_lag_summary()
-#     data <- round(sync_lag_data(), 2)
-#     data <- table(data > summary[4])
-#     names(data) <- c("Faux", "Vrai")
-#     data <- data.frame(data) 
-#     
-#     options = list(height = GL_chart_h, legend = "{position:'bottom'}")
-#     
-#     gvisPieChart(data, options = options)
-#   })
-#   
-#   output$rec_usage_sync_lag_avg <- renderValueBox({
-#     data <- sync_lag_summary()[4]
-#     valueBox(data, "Moyenne (jours)", icon = icon("info-circle"), color = "aqua")
-#   })
-#   
-#   output$rec_usage_sync_lag_n_above_avg <- renderValueBox({
-#     data <- sum(sync_lag_data() > sync_lag_summary()[4])
-#     valueBox(data, "Nb.CSPS avec un délai > moyenne", icon = icon("exclamation-circle"), color = "red")
-#   })
-#   
-#   output$rec_usage_sync_lag_median <- renderValueBox({
-#     data <- sync_lag_summary()[3]
-#     valueBox(data, "Médianne (jours)", icon = icon("info-circle"), color = "aqua")
-#   })
-#   
-
-#   
-
-#   
-
-#   
-
-# 
-#   output$data_entry_average <- renderGvis({
-#     e <- enroll_data_f()
-#     v <- visit_data_f()
-#     t <- treatment_data_f()
-#     data <- data.frame(c(mean(e$duration), mean(v$duration), mean(t$duration)))
-#     data <- cbind(c("Enregistrement", "Evaluation", "Traitement"), data)
-#     colnames(data) <- c("form", "average")
-#     data$average <- round(data$average, 2)
-#     
-#     data <- mutate(data, total = average)
-#     data <- mutate(data, total.annotation = as.character(total))
-#     yvar <- colnames(data)[2:ncol(data)]
-#     options <- list(height = GL_chart_h,
-#       legend = "{position:'none'}",
-#       hAxis = "{title:'Formulaire'}",
-#       vAxis = "{title:'Durée moyenne de saisie (minutes)', minValue:0}",
-#       series = paste("{", ncol(data) - 3,": {type: 'line', lineWidth: 0, visibleInLegend: 'false'}}", sep = ""),
-#       seriesType = "bars")
-#     
-#     gvisComboChart(data, xvar = "form", yvar = yvar, options = options)
-#   })
-#   
-#   output$data_entry_qualification <- renderGvis({
-#     data <- data.frame(tapply(visit_data_f()$duration, visit_data_f()$qualification, mean))
-#     data <- cbind(rownames(data), data)
-#     colnames(data) <- c("qualification", "average")
-#     data$average <- round(data$average, 2)
-#     data$average <- as.numeric(data$average)
-#     data <- mutate(data, total = average)
-#     data <- mutate(data, total.annotation = as.character(total))
-#     yvar <- colnames(data)[2:ncol(data)]
-# 
-#     options <- list(height = GL_chart_h,
-#       title = "Formulaire d'évaluation",
-#       legend = "{position:'none'}",
-#       hAxis = "{title:'Qualification'}",
-#       vAxis = "{title:'Durée moyenne de saisie (minutes)', minValue:1}",
-#       series = paste("{", ncol(data) - 3,": {type: 'line', lineWidth: 0, visibleInLegend: 'false'}}", sep = ""),
-#       seriesType = "bars")
-#     
-#     gvisColumnChart(data, xvar = "qualification", yvar = yvar, options = options)
-#   })
-#   
-#   output$data_entry_n_classifications_eval <- renderGvis({
-#     data <- data.frame(tapply(visit_data_f()$duration, visit_data_f()$n_classifications, mean))
-#     data <- cbind(rownames(data), data)
-#     colnames(data) <- c("n_classifications", "average")
-#     data$average <- round(data$average, 2)
-#     data$average <- as.numeric(data$average)
-#     data <- mutate(data, total = average)
-#     data <- mutate(data, total.annotation = as.character(total))
-#     yvar <- colnames(data)[2:ncol(data)]
-#     
-#     options <- list(height = GL_chart_h,
-#       title = "Formulaire d'évaluation",
-#       legend = "{position:'none'}",
-#       hAxis = "{title:'Nombre de classifications'}",
-#       vAxis = "{title:'Durée moyenne de saisie (minutes)', minValue:1}",
-#       series = paste("{", ncol(data) - 3,": {type: 'line', lineWidth: 0, visibleInLegend: 'false'}}", sep = ""),
-#       seriesType = "bars")
-#     
-#     gvisColumnChart(data, xvar = "n_classifications", yvar = yvar, options = options)
-#   })
-#   
-#   output$data_entry_n_classifications_treat <- renderGvis({
-#     data <- data.frame(tapply(treatment_data_f()$duration, treatment_data_f()$n_classifications, mean))
-#     data <- cbind(rownames(data), data)
-#     colnames(data) <- c("n_classifications", "average")
-#     data$average <- round(data$average, 2)
-#     data$average <- as.numeric(data$average)
-#     data <- mutate(data, total = average)
-#     data <- mutate(data, total.annotation = as.character(total))
-#     yvar <- colnames(data)[2:ncol(data)]
-#     
-#     options <- list(height = GL_chart_h,
-#       title = "Formulaire de traitement",
-#       legend = "{position:'none'}",
-#       hAxis = "{title:'Nombre de classifications'}",
-#       vAxis = "{title:'Durée moyenne de saisie (minutes)', minValue:0}",
-#       series = paste("{", ncol(data) - 3,": {type: 'line', lineWidth: 0, visibleInLegend: 'false'}}", sep = ""),
-#       seriesType = "bars")
-#     
-#     gvisColumnChart(data, xvar = "n_classifications", yvar = yvar, options = options)
-#   })
-#   
-#   output$data_entry_n_minutes <- renderValueBox ({
-#     data <- format_number(sum_data_entry())
-#     valueBox(data, "Nombre de minutes de saisie", icon = icon("clock-o"), color = "light-blue")
-#   })
-#   
-#   output$data_entry_n_hours <- renderValueBox ({
-#     data <- format_number(trunc(sum_data_entry() / 60))
-#     valueBox(data, "Nombre d'heures de saisie", icon = icon("clock-o"), color = "green")
-#   })
-#   
-#   output$data_entry_n_days <- renderValueBox ({
-#     data <- format_number(trunc(sum_data_entry() / 60 / 24))
-#     valueBox(data, "Nombre de jours de saisie", icon = icon("clock-o"), color = "aqua")
-#   })
-#   
-#   output$data_entry_average_agent <- renderValueBox ({
-#     n <- length(unique(visit_data_f()$health_worker_id))
-#     data <- format_number(trunc(sum_data_entry() / 60 / n))
-#     valueBox(data, "Moyenne par agent (heures)", icon = icon("clock-o"), color = "yellow")
-#   })
+    options <- list(height = GL_chart_h,
+      title = "Formulaire d'évaluation",
+      legend = "{position:'none'}",
+      hAxis = "{title:'Qualification'}",
+      vAxis = "{title:'Durée moyenne de saisie (minutes)', minValue:1}",
+      series = paste("{", ncol(data) - 3,": {type: 'line', lineWidth: 0, visibleInLegend: 'false'}}", sep = ""),
+      seriesType = "bars")
+    
+    gvisColumnChart(data, xvar = "qualification", yvar = yvar, options = options)
+  })
+  
+  output$data_entry_n_classifications_eval <- renderGvis({
+    data <- data.frame(tapply(visit_data_f()$duration, visit_data_f()$n_classifications, mean))
+    data <- cbind(rownames(data), data)
+    colnames(data) <- c("n_classifications", "average")
+    data$average <- round(data$average, 2)
+    data$average <- as.numeric(data$average)
+    data <- mutate(data, total = average)
+    data <- mutate(data, total.annotation = as.character(total))
+    yvar <- colnames(data)[2:ncol(data)]
+    
+    options <- list(height = GL_chart_h,
+      title = "Formulaire d'évaluation",
+      legend = "{position:'none'}",
+      hAxis = "{title:'Nombre de classifications'}",
+      vAxis = "{title:'Durée moyenne de saisie (minutes)', minValue:1}",
+      series = paste("{", ncol(data) - 3,": {type: 'line', lineWidth: 0, visibleInLegend: 'false'}}", sep = ""),
+      seriesType = "bars")
+    
+    gvisColumnChart(data, xvar = "n_classifications", yvar = yvar, options = options)
+  })
+  
+  output$data_entry_n_classifications_treat <- renderGvis({
+    data <- data.frame(tapply(treatment_data_f()$duration, treatment_data_f()$n_classifications, mean))
+    data <- cbind(rownames(data), data)
+    colnames(data) <- c("n_classifications", "average")
+    data$average <- round(data$average, 2)
+    data$average <- as.numeric(data$average)
+    data <- mutate(data, total = average)
+    data <- mutate(data, total.annotation = as.character(total))
+    yvar <- colnames(data)[2:ncol(data)]
+    
+    options <- list(height = GL_chart_h,
+      title = "Formulaire de traitement",
+      legend = "{position:'none'}",
+      hAxis = "{title:'Nombre de classifications'}",
+      vAxis = "{title:'Durée moyenne de saisie (minutes)', minValue:0}",
+      series = paste("{", ncol(data) - 3,": {type: 'line', lineWidth: 0, visibleInLegend: 'false'}}", sep = ""),
+      seriesType = "bars")
+    
+    gvisColumnChart(data, xvar = "n_classifications", yvar = yvar, options = options)
+  })
+  
+  output$data_entry_n_minutes <- renderValueBox ({
+    data <- format_number(sum_data_entry())
+    valueBox(data, "Nombre de minutes de saisie", icon = icon("clock-o"), color = "light-blue")
+  })
+  
+  output$data_entry_n_hours <- renderValueBox ({
+    data <- format_number(trunc(sum_data_entry() / 60))
+    valueBox(data, "Nombre d'heures de saisie", icon = icon("clock-o"), color = "green")
+  })
+  
+  output$data_entry_n_days <- renderValueBox ({
+    data <- format_number(trunc(sum_data_entry() / 60 / 24))
+    valueBox(data, "Nombre de jours de saisie", icon = icon("clock-o"), color = "aqua")
+  })
+  
+  output$data_entry_average_agent <- renderValueBox ({
+    n <- length(unique(visit_data_f()$health_worker_id))
+    data <- format_number(trunc(sum_data_entry() / 60 / n))
+    valueBox(data, "Moyenne par agent (heures)", icon = icon("clock-o"), color = "yellow")
+  })
 }
