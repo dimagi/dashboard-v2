@@ -26,31 +26,27 @@
     <td>Framework that allows you to create web applications is R.</td>
   </tr>
   <tr>
-    <td>Specific packages</td>
+    <td rowspan="5">Specific packages</td>
     <td>Shinydashboard</td>
     <td>0.3.0</td>
     <td>CSS framework that allows you to create dashboard looking layouts.</td>
   </tr>
   <tr>
-    <td></td>
     <td>Shinyapps</td>
     <td>0.3.63</td>
     <td>Library that allows you to deploy applications to shinyapps.io directly from RStudio.</td>
   </tr>
   <tr>
-    <td></td>
     <td>Leaftlet</td>
     <td>1.0.0.9999</td>
     <td>Create interactive maps with the JavaScript ‘Leaflet’ Library</td>
   </tr>
   <tr>
-    <td></td>
     <td>GoogleVis</td>
     <td>0.5.8</td>
     <td>R interface to Google Charts</td>
   </tr>
   <tr>
-    <td></td>
     <td>Lubridate</td>
     <td>1.3.3</td>
     <td>Makes dealing with dates easier</td>
@@ -94,50 +90,54 @@ Download the following exports from CommCareHQ and copy them to the ‘data’ d
 
 <table>
   <tr>
-    <td>Name</td>
-    <td>Action</td>
+    <th>Name</th>
+    <th>Action</th>
   </tr>
   <tr>
-    <td>Case Exports</td>
-    <td></td>
+    <th colspan="2">Case Exports</th>
   </tr>
   <tr>
     <td>tablet_user (IeDA Dashboard, PBF Migration)</td>
-    <td>Rename to: tablet-users.csv</td>
+    <td><b>Rename to:</b> tablet-users.csv</td>
   </tr>
   <tr>
-    <td>Form Exports</td>
-    <td></td>
+    <th colspan="2">Form Exports</th>
   </tr>
   <tr>
     <td>Child Treatment - Meta Data (IeDA Dashboard)</td>
-    <td>Rename to: child-treatment.csv</td>
+    <td><b>Rename to:</b> child-treatment.csv</td>
   </tr>
   <tr>
     <td>Child Visit - Meta Data (IeDA Dashboard)</td>
-    <td>Rename to: child-visit.csv</td>
+    <td><b>Rename to:</b> child-visit.csv</td>
   </tr>
   <tr>
     <td>Enroll Child - Meta Data (IeDA Dashboard)</td>
-    <td>Rename to: enroll-child.csv</td>
+    <td><b>Rename to:</b> enroll-child.csv</td>
   </tr>
   <tr>
-    <td>Other Exports</td>
-    <td></td>
+    <th colspan="2">Other Exports</th>
   </tr>
   <tr>
     <td>List of mobile users</td>
-    <td>Rename column: "data: csps_site_code" to “site_code”
-Rename column: “data: district” to “district”
-Keep only columns: username, site_code, district
-Delete sheet: groups
-Save as: mobile-users.csv</td>
+    <td>
+      <ul>
+        <li><b>Rename column:</b> "data: csps_site_code" to “site_code”<br/></li>
+        <li><b>Rename column:</b> “data: district” to “district”</li>
+        <li><b>Keep only columns:</b> username, site_code, district</li>
+        <li><b>Delete sheet:</b> groups</li>
+        <li><b>Save as:</b> mobile-users.csv</li>
+      </ul>
+    </td>
   </tr>
   <tr>
     <td>Locations</td>
-    <td>Keeps only sheet: CSPS
-Keep only columns: site_code, name, parent_site_code, latitude, longitude
-Save as: locations.csv</td>
+    <td>
+      <ul>
+        <li><b>Keeps only sheet:</b> CSPS</li>
+        <li><b>Keep only columns:</b> site_code, name, parent_site_code, latitude, longitude</li>
+        <li><b>Save as:</b> locations.csv</td></li>
+      </ul>
   </tr>
 </table>
 
