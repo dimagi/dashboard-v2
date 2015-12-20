@@ -2,10 +2,10 @@
 
 <table>
   <tr>
-    <td>Item</td>
-    <td>Name</td>
-    <td>Version</td>
-    <td>Description</td>
+    <th>Item</th>
+    <th>Name</th>
+    <th>Version</th>
+    <th>Description</th>
   </tr>
   <tr>
     <td>IDE</td>
