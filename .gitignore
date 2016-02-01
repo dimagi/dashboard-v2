@@ -13,7 +13,6 @@
 vignettes/*.html
 vignettes/*.pdf
 
-data/*
 shinyapps/*
 
 ieda-dropbox-token.rds
